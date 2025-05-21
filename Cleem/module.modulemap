@@ -1,0 +1,10 @@
+module Cleem {
+    umbrella header "GoogleHeaders/GoogleHeaders.h"
+    export *
+    module * { export * }
+}
+
+module AppAuth {}
+module GTMAppAuth {}
+module GTMSessionFetcher {}
+module GoogleSignIn {} 

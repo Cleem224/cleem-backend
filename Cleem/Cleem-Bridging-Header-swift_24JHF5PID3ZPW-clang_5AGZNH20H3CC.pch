@@ -1,0 +1,8 @@
+#ifndef Cleem_Bridging_Header_swift_24JHF5PID3ZPW_clang_5AGZNH20H3CC_pch
+#define Cleem_Bridging_Header_swift_24JHF5PID3ZPW_clang_5AGZNH20H3CC_pch
+
+// Базовые заголовочные файлы iOS
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
+#endif /* Cleem_Bridging_Header_swift_24JHF5PID3ZPW_clang_5AGZNH20H3CC_pch */ 

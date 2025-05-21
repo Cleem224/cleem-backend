@@ -1,0 +1,6 @@
+framework module Pods_Cleem {
+  umbrella header "Pods-Cleem-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-Cleem/Pods-Cleem-resources.sh
+${PODS_CONFIGURATION_BUILD_DIR}/AppAuth/AppAuthCore_Privacy.bundle
+${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn/GoogleSignIn.bundle

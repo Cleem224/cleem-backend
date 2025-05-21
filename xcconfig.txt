@@ -1,0 +1,2 @@
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn" "${PODS_CONFIGURATION_BUILD_DIR}/GTMAppAuth" "${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher" "${PODS_CONFIGURATION_BUILD_DIR}/AppAuth"
+OTHER_LDFLAGS = $(inherited) -ObjC -framework "AppAuth" -framework "CoreGraphics" -framework "CoreText" -framework "Foundation" -framework "GTMAppAuth" -framework "GTMSessionFetcher" -framework "GoogleSignIn" -framework "LocalAuthentication" -framework "SafariServices" -framework "Security" -framework "UIKit" -weak_framework "AuthenticationServices" 

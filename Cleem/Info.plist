@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>Приложению требуется доступ к фотогалерее для выбора изображений еды</string>
+        <key>NSCameraUsageDescription</key>
+        <string>Приложению требуется доступ к камере для сканирования штрих-кодов и распознавания еды</string>
+        <key>NSHealthShareUsageDescription</key>
+        <string>Нам нужен доступ к данным о вашей активности для отслеживания пройденных шагов и расчета потраченных калорий</string>
+        <key>NSHealthUpdateUsageDescription</key>
+        <string>Данные о потребленных калориях и пищевых привычках помогут нам формировать для вас подходящие рекомендации</string>
+        <key>UIBackgroundModes</key>
+        <array>
+            <string>fetch</string>
+            <string>processing</string>
+        </array>
+        <key>CFBundleURLTypes</key>
+        <array>
+            <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>com.googleusercontent.apps.997323713749-ibh2hpm0nuorg821l2outsh9g24d79q6</string>
+                </array>
+            </dict>
+        </array>
+        <key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <true/>
+        </dict>
+        <key>GIDClientID</key>
+        <string>997323713749-ibh2hpm0nuorg821l2outsh9g24d79q6.apps.googleusercontent.com</string>
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>googlechrome</string>
+            <string>googlechromes</string>
+        </array>
+    </dict>
+</plist>

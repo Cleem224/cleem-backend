@@ -1,0 +1,258 @@
+import SwiftUI
+import UIKit
+import Combine
+
+struct NutrientsModalView: View {
+    @Environment(\.presentationMode) var presentationMode
+    @Binding var calorieGoal: Int
+    @Binding var proteinGoal: Int
+    @Binding var carbsGoal: Int
+    @Binding var fatGoal: Int
+    @State private var tempCalorieGoal: Int
+    @State private var tempProteinGoal: Int
+    @State private var tempCarbsGoal: Int
+    @State private var tempFatGoal: Int
+    @State private var editingField: NutrientField? = nil
+    @State private var keyboardHeight: CGFloat = 0
+    @State private var isKeyboardVisible = false
+    
+    // For notification observers
+    @State private var keyboardObservers: [NSObjectProtocol] = []
+    
+    // Add a binding for direct dismiss
+    var onDismiss: (() -> Void)?
+    
+    enum NutrientField: Identifiable {
+        case calories, protein, carbs, fat
+        
+        var id: Self { self }
+        
+        var title: String {
+            switch self {
+            case .calories: return "Calorie goal"
+            case .protein: return "Protein goal"
+            case .carbs: return "Carb goal"
+            case .fat: return "Fat goal"
+            }
+        }
+    }
+    
+    init(calorieGoal: Binding<Int>, proteinGoal: Binding<Int>, carbsGoal: Binding<Int>, fatGoal: Binding<Int>, onDismiss: (() -> Void)? = nil) {
+        self._calorieGoal = calorieGoal
+        self._proteinGoal = proteinGoal
+        self._carbsGoal = carbsGoal
+        self._fatGoal = fatGoal
+        self._tempCalorieGoal = State(initialValue: calorieGoal.wrappedValue)
+        self._tempProteinGoal = State(initialValue: proteinGoal.wrappedValue)
+        self._tempCarbsGoal = State(initialValue: carbsGoal.wrappedValue)
+        self._tempFatGoal = State(initialValue: fatGoal.wrappedValue)
+        self.onDismiss = onDismiss
+    }
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            // Nutrient Goals
+            ScrollView {
+                VStack(spacing: 15) {
+                    nutrientRow(field: .calories, value: $tempCalorieGoal, color: .black, iconName: "flame.fill")
+                    nutrientRow(field: .protein, value: $tempProteinGoal, color: .red.opacity(0.8), iconName: "p.square.fill")
+                    nutrientRow(field: .carbs, value: $tempCarbsGoal, color: .blue.opacity(0.7), iconName: "c.square.fill")
+                    nutrientRow(field: .fat, value: $tempFatGoal, color: .orange.opacity(0.8), iconName: "drop.fill")
+                }
+                .padding(.horizontal, 5)
+            }
+            
+            // Action buttons
+            HStack(spacing: 20) {
+                Button(action: {
+                    // Revert changes
+                    tempCalorieGoal = calorieGoal
+                    tempProteinGoal = proteinGoal
+                    tempCarbsGoal = carbsGoal
+                    tempFatGoal = fatGoal
+                    editingField = nil
+                    dismissKeyboard()
+                }) {
+                    Text("Revert")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+                }
+                
+                Button(action: {
+                    // Save changes
+                    calorieGoal = tempCalorieGoal
+                    proteinGoal = tempProteinGoal
+                    carbsGoal = tempCarbsGoal
+                    fatGoal = tempFatGoal
+                    editingField = nil
+                    dismissKeyboard()
+                    dismissModal()
+                }) {
+                    Text("Save")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 15)
+                        .background(Color.black)
+                        .cornerRadius(12)
+                }
+            }
+            .padding(.horizontal, 15)
+            .padding(.vertical, 10)
+        }
+        .padding(.bottom, isKeyboardVisible ? keyboardHeight - 30 : 0) // Account for keyboard
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: keyboardHeight)
+        .onAppear {
+            setupKeyboardObservers()
+        }
+        .onDisappear {
+            removeKeyboardObservers()
+        }
+    }
+    
+    func dismissModal() {
+        // Add haptic feedback when dismissing
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
+        // Use direct dismiss function if provided
+        if let dismiss = onDismiss {
+            dismiss()
+        } else {
+            // Fallback to presentation mode dismiss
+            presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    func nutrientRow(field: NutrientField, value: Binding<Int>, color: Color, iconName: String) -> some View {
+        Button(action: {
+            dismissKeyboard()
+            
+            // Add small delay before showing keyboard
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                editingField = field
+                // Trigger haptic feedback when selecting a field
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.impactOccurred()
+            }
+        }) {
+            HStack(spacing: 15) {
+                // Circle with icon
+                ZStack {
+                    Circle()
+                        .fill(color.opacity(0.2))
+                        .frame(width: 55, height: 55)
+                        .overlay(
+                            Image(systemName: iconName)
+                                .font(.system(size: 24))
+                                .foregroundColor(color)
+                        )
+                        .shadow(color: color.opacity(0.3), radius: 4, x: 0, y: 2)
+                }
+                
+                // Title and value
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(field.title)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.gray)
+                    
+                    if editingField == field {
+                        TextField("", value: value, format: .number)
+                            .keyboardType(.numberPad)
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.black)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    // Ensure focus
+                                    UIApplication.shared.sendAction(#selector(UIResponder.becomeFirstResponder), to: nil, from: nil, for: nil)
+                                }
+                            }
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        editingField = nil
+                                        dismissKeyboard()
+                                    }) {
+                                        Text("Done")
+                                            .foregroundColor(color)
+                                            .font(.system(size: 16, weight: .semibold))
+                                            .padding(.trailing, 8)
+                                    }
+                                }
+                            )
+                    } else {
+                        Text("\(value.wrappedValue)")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(.black)
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding(15)
+            .background(Color.white)
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(editingField == field ? color : Color.clear, lineWidth: editingField == field ? 2 : 0)
+            )
+            .animation(.spring(response: 0.2, dampingFraction: 0.8), value: editingField == field)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+    // MARK: - Keyboard Handling
+    
+    func setupKeyboardObservers() {
+        // Keyboard will show notification
+        let showObserver = NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillShowNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+            
+            self.keyboardHeight = keyboardFrame.height
+            self.isKeyboardVisible = true
+            
+            // Add haptic feedback when keyboard appears
+            let generator = UIImpactFeedbackGenerator(style: .light)
+            generator.impactOccurred(intensity: 0.6)
+        }
+        
+        // Keyboard will hide notification
+        let hideObserver = NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            self.keyboardHeight = 0
+            self.isKeyboardVisible = false
+        }
+        
+        // Store observers for removal later
+        keyboardObservers = [showObserver, hideObserver]
+    }
+    
+    func removeKeyboardObservers() {
+        // Remove all stored observers
+        keyboardObservers.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
+        keyboardObservers = []
+    }
+} 

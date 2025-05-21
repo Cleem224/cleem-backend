@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788" systemVersion="24E263" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Food" representedClassName=".Food" syncable="YES">
+        <attribute name="barcode" optional="YES" attributeType="String"/>
+        <attribute name="brand" optional="YES" attributeType="String"/>
+        <attribute name="calories" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="carbs" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="cholesterol" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fat" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fiber" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="image" optional="YES" attributeType="Binary"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
+        <attribute name="isComposed" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isFavorite" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isIngredient" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="protein" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="servingSize" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="servingUnit" attributeType="String"/>
+        <attribute name="sodium" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="sugar" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="wasTracked" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="food" inverseEntity="Ingredient"/>
+        <relationship name="mealFoods" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MealFood" inverseName="food" inverseEntity="MealFood"/>
+    </entity>
+    <entity name="Ingredient" representedClassName="Ingredient" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="calories" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="carbs" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="protein" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String"/>
+        <relationship name="food" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Food" inverseName="ingredients" inverseEntity="Food"/>
+    </entity>
+    <entity name="Meal" representedClassName=".Meal" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="totalCalories" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="totalCarbs" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="totalFat" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="totalProtein" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="type" attributeType="String"/>
+        <relationship name="mealFoods" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MealFood" inverseName="meal" inverseEntity="MealFood"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="meals" inverseEntity="User"/>
+    </entity>
+    <entity name="MealFood" representedClassName=".MealFood" syncable="YES">
+        <attribute name="amount" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="calories" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="carbs" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="fat" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="protein" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="servingSize" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="unit" attributeType="String"/>
+        <relationship name="food" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Food" inverseName="mealFoods" inverseEntity="Food"/>
+        <relationship name="meal" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Meal" inverseName="mealFoods" inverseEntity="Meal"/>
+    </entity>
+    <entity name="Steps" representedClassName="Steps" syncable="YES">
+        <attribute name="calories" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="count" attributeType="Integer 32" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="distance" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="source" optional="YES" attributeType="String"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="steps" inverseEntity="User"/>
+    </entity>
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="activityLevel" attributeType="String"/>
+        <attribute name="age" attributeType="Integer 16" minValueString="0" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="currentWeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dailyCalorieGoal" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dailyCarbsGoal" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dailyFatGoal" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dailyProteinGoal" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dailyStepsTarget" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="dailyWaterTarget" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gender" attributeType="String"/>
+        <attribute name="goal" attributeType="String"/>
+        <attribute name="height" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="targetWeight" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="weight" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="meals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Meal" inverseName="user" inverseEntity="Meal"/>
+        <relationship name="steps" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Steps" inverseName="user" inverseEntity="Steps"/>
+        <relationship name="waterIntakes" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WaterIntake" inverseName="user" inverseEntity="WaterIntake"/>
+        <relationship name="weightRecords" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeightRecord" inverseName="user" inverseEntity="WeightRecord"/>
+    </entity>
+    <entity name="WaterIntake" representedClassName="WaterIntake" syncable="YES">
+        <attribute name="amount" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="unit" attributeType="String"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="waterIntakes" inverseEntity="User"/>
+    </entity>
+    <entity name="WeightRecord" representedClassName="WeightRecord" syncable="YES">
+        <attribute name="bodyFatPercentage" optional="YES" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="unit" attributeType="String"/>
+        <attribute name="weight" attributeType="Double" minValueString="0" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="weightRecords" inverseEntity="User"/>
+    </entity>
+</model>
